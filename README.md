@@ -1,1 +1,0 @@
-# Supermarket-Chain-Database-Project
