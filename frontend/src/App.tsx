@@ -1,11 +1,14 @@
 import React from 'react';
+import MaterialThemeProvider from './hooks/MaterialThemeProvider';
 import Routes from './routes/routes';
 
 
 function App() {
 
   return (
-    <Routes />
+    <MaterialThemeProvider>
+      <Routes />
+    </MaterialThemeProvider>
   );
 }
 
