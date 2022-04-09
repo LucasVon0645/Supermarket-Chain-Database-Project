@@ -11,6 +11,7 @@ import React, { useState } from "react";
 
 // components
 import { Drawer, IconButton } from "@material-ui/core";
+import { Link } from 'react-router-dom';
 
 // styled-components
 import * as S from "./styles";
@@ -37,14 +38,18 @@ const PageTemplate: React.FC = ({ children }) => {
               <S.StyledExitIcon fontSize="large" />
             </IconButton>
           </S.DrawerHeader>
-          <S.ListContainer direction="column">
-            <S.ListItemStyled>
-              <S.MenuItem>página 1</S.MenuItem>
-            </S.ListItemStyled>
+          <S.ListContainer>
+            <Link  to="/">
+              <S.ListItemStyled>
+                <S.MenuItem>Pedidos</S.MenuItem>
+              </S.ListItemStyled>
+            </Link>
             <S.StyledDivider />
-            <S.ListItemStyled>
-              <S.MenuItem>página 2</S.MenuItem>
-            </S.ListItemStyled>
+            <Link  to="/employees">
+              <S.ListItemStyled>
+                <S.MenuItem>Funcionários</S.MenuItem>
+              </S.ListItemStyled>
+            </Link>
             <S.StyledDivider />
             <S.ListItemStyled>
               <S.MenuItem>página 3</S.MenuItem>

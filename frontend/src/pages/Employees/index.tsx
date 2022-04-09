@@ -28,13 +28,19 @@ const Employees: React.FC = () => {
   };
 
   const [role, setRole] = useState("");
-  const [unity, setUnity] = useState("");
+  const [, setUnity] = useState("");
   const [arrayEmployees, setArrayEmployees] = useState([]);
 
-  const handleCreateList = (employeesList: any) => {
-    return employeesList.map((item: { [x: string]: string }) => {
+  const handleCreateList = (employeesList: any[]) => {
+    return employeesList.map((item: { [x: string]: string }, index) => {
       return (
-        <p>{"Nome: " + item["Nome"] + " / Salário: " + item["Salário"]}</p>
+        <S.ResultListItem>
+            <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
+            <S.ResultListItemLabel>{"Nome: "}</S.ResultListItemLabel>
+            <S.ResultListItemText>{item["Nome"]}</S.ResultListItemText>
+            <S.ResultListItemLabel>{"Salário: "}</S.ResultListItemLabel>
+            <S.ResultListItemText>{item["Salário"]}</S.ResultListItemText>
+          </S.ResultListItem>
       );
     });
   };
@@ -42,8 +48,8 @@ const Employees: React.FC = () => {
   return (
     <PageTemplate>
       <div>
-        <h1>Funcionários</h1>
-        <S.Description>Preencha as informações a seguir para consulta.</S.Description>
+        <S.Subtitle>Funcionários</S.Subtitle>
+        <S.Description>Preencha as informações a seguir para consultar o quadro de funcionários com base no cargo e na unidade.</S.Description>
         <S.SearchContainer>
           <FormControl>
             <InputLabel htmlFor="role-simple">Cargo</InputLabel>
@@ -65,7 +71,10 @@ const Employees: React.FC = () => {
             pesquisar
           </Button>
         </S.SearchContainer>
-        {handleCreateList(arrayEmployees)}
+        <S.ResultsContainer>
+          <S.SectionTitle>Resultado: </S.SectionTitle>
+          {handleCreateList(arrayEmployees)}
+        </S.ResultsContainer>
       </div>
     </PageTemplate>
   );

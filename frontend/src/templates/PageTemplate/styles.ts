@@ -5,8 +5,8 @@ import ExitIcon from "@material-ui/icons/ArrowBackIos";
 
 // interfaces
 
-// styled components
 export const StyledMenuIcon = styled(MenuIcon)`
+// styled components
    && {
     color: #FFF;
    }
@@ -30,6 +30,7 @@ export const PageContent = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     width: 100%;
+    margin-left: 100px;
 `;
 
 export const Title = styled.h1`
@@ -48,6 +49,7 @@ export const Menu = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 12px;
+    position: fixed;
 `
 
 export const DrawerContainer = styled.div`
