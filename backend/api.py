@@ -160,8 +160,8 @@ def get_orders_by_shop():
         print(e)
     return response
 
-# Pesquisa os fornecedores de um pedido especificado
-@app.route('/pedidos', methods = ['POST'])
+# Pesquisa os fornecedores de um produto especificado
+@app.route('/fornecedores', methods = ['POST'])
 def get_providers_by_product():
     myresponse = request.json
     product = myresponse["idproduto"]
@@ -177,7 +177,32 @@ def get_providers_by_product():
                 cursor.execute('SELECT CNPJ, Nome FROM fornecedores INNER JOIN fornecedores-produtos ON fabricantes.CNPJ = fornecedores-produtos.CNPJ WHERE IDProduto = "' + product + '";')
                 result = cursor.fetchall()
                 print(result)
-                finalResult = list(map(lambda item: {"Nome": item[1], "CNPJ": item[1]}, result))
+                finalResult = list(map(lambda item: {"Nome": item[1], "CNPJ": item[0]}, result))
+                response = {'response': finalResult}
+                print(finalResult)
+    
+    except Error as e:
+        print(e)
+    return response
+
+# Pesquisa os pedidos de um fornecedor especificado
+@app.route('/pedidos', methods = ['POST'])
+def get_orders_by_providers():
+    myresponse = request.json
+    provider = myresponse["cnpj"]
+    response = {}
+    try:
+        with connect(
+            host="localhost",
+            user=u"root",
+            password="mysql",
+            database="cadeia_supermercados"
+        ) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos-fornecedores ON  pedidos.IDProduto = pedidos-fornecedores.IDProduto WHERE CNPJ = "' + provider + '";')
+                result = cursor.fetchall()
+                print(result)
+                finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
                 response = {'response': finalResult}
                 print(finalResult)
     
