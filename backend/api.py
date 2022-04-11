@@ -159,3 +159,28 @@ def get_orders_by_shop():
     except Error as e:
         print(e)
     return response
+
+# Pesquisa os fornecedores de um pedido especificado
+@app.route('/pedidos', methods = ['POST'])
+def get_providers_by_product():
+    myresponse = request.json
+    product = myresponse["idproduto"]
+    response = {}
+    try:
+        with connect(
+            host="localhost",
+            user=u"root",
+            password="mysql",
+            database="cadeia_supermercados"
+        ) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT CNPJ, Nome FROM fornecedores INNER JOIN fornecedores-produtos ON fabricantes.CNPJ = fornecedores-produtos.CNPJ WHERE IDProduto = "' + product + '";')
+                result = cursor.fetchall()
+                print(result)
+                finalResult = list(map(lambda item: {"Nome": item[1], "CNPJ": item[1]}, result))
+                response = {'response': finalResult}
+                print(finalResult)
+    
+    except Error as e:
+        print(e)
+    return response
