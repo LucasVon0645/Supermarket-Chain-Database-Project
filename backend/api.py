@@ -209,3 +209,28 @@ def get_orders_by_providers():
     except Error as e:
         print(e)
     return response
+
+# Pesquisa os pedidos mais recentes de um produto
+@app.route('/pedidos', methods = ['POST'])
+def get_recent_orders():
+    myresponse = request.json
+    product = myresponse["idproduto"]
+    response = {}
+    try:
+        with connect(
+            host="localhost",
+            user=u"root",
+            password="mysql",
+            database="cadeia_supermercados"
+        ) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos-produtos ON pedidos.IDPedido = pedidos-produtos.IDPedido WHERE IDPedido ="' + product + '" ORDER BY DataCriação DESC;')
+                result = cursor.fetchall()
+                print(result)
+                finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
+                response = {'response': finalResult}
+                print(finalResult)
+    
+    except Error as e:
+        print(e)
+    return response
