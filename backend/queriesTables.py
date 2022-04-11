@@ -12,8 +12,8 @@ CREATE TABLE produtos (
     IDProduto INT NOT NULL UNIQUE KEY AUTO_INCREMENT,
     Nome  VARCHAR(100) NOT NULL,
     Marca  VARCHAR(100) NOT NULL,
-    Departamento  VARCHAR(100) NOT NULL,
-    Descrição  VARCHAR(100) NOT NULL,
+    Categoria  VARCHAR(100) NOT NULL,
+    Preço  DECIMAL(100000) NOT NULL,
     PRIMARY KEY (IDProduto)
 )
 """
