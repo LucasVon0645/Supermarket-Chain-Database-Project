@@ -224,7 +224,33 @@ def get_recent_orders():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos-produtos ON pedidos.IDPedido = pedidos-produtos.IDPedido WHERE IDPedido ="' + product + '" ORDER BY DataCriação DESC;')
+                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos-produtos ON pedidos.IDPedido = pedidos-produtos.IDPedido WHERE IDPedido = "' + product + '" ORDER BY DataCriação DESC;')
+                result = cursor.fetchall()
+                print(result)
+                finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
+                response = {'response': finalResult}
+                print(finalResult)
+    
+    except Error as e:
+        print(e)
+    return response
+
+# Pesquisa os pedidos de um produto específico em um supermercado específico
+@app.route('/pedidos', methods = ['POST'])
+def get_orders_by_product_and_shop():
+    myresponse = request.json
+    product = myresponse["idproduto"]
+    market = myresponse["supermercado"]
+    response = {}
+    try:
+        with connect(
+            host="localhost",
+            user=u"root",
+            password="mysql",
+            database="cadeia_supermercados"
+        ) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos-produtos ON pedidos.IDPedido = pedidos-produtos.IDPedido INNER JOIN supermercados-pedidos ON pedidos.IDPedido = supermercados-pedidos.Idpedido WHERE IDSupermercado = "' + product + '" ORDER BY DataCriação DESC;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
