@@ -7,7 +7,7 @@ CORS(app)
 @app.route('/produtos', methods = ['POST'])
 def get_produtcs():
     myresponse = request.json
-    department = myresponse["departamento"]
+    category = myresponse["categoria"]
     response = {}
     try:
         with connect(
@@ -17,7 +17,7 @@ def get_produtcs():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT * FROM produtos WHERE Departamento = "'+department+'"')
+                cursor.execute('SELECT * FROM produtos WHERE Categoria = "' + category + '"')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"Nome": item[1], "Marca": item[2]}, result))
