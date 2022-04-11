@@ -36,6 +36,7 @@ export const SectionTitle = styled.p`
     font-size: 20px;
     color:  #343635;
     font-family: 'Poppins';
+    max-width: 400px;
 `
 export const SectionBlock = styled.div<SectionBlockProps>`
     display: flex;

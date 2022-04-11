@@ -7,21 +7,21 @@ import PageTemplate from "../../templates/PageTemplate";
 import * as S from "./styles";
 
 
-const Employees: React.FC = () => {
+const Equipments: React.FC = () => {
   // constants
-  const getEmployees = async () => {
+  const getEquipments = async () => {
     const { data } = await api.post("/funcionarios", { cargo: role });
     console.log(data);
     const list = data["response"];
-    setArrayEmployees(list);
+    setArrayEquipments(list);
   };
 
   const [role, setRole] = useState("");
   const [, setUnity] = useState("");
-  const [arrayEmployees, setArrayEmployees] = useState([]);
+  const [arrayEquipments, setArrayEquipments] = useState([]);
 
-  const handleCreateList = (employeesList: any[]) => {
-    return employeesList.map((item: { [x: string]: string }, index) => {
+  const handleCreateList = (equipmentsList: any[]) => {
+    return equipmentsList.map((item: { [x: string]: string }, index) => {
       return (
         <S.ResultListItem>
             <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
@@ -36,18 +36,9 @@ const Employees: React.FC = () => {
 
   return (
     <PageTemplate>
-      <div>
-        <S.Subtitle>Funcionários</S.Subtitle>
-        <S.Description>Preencha as informações a seguir para consultar o quadro de funcionários com base no cargo e na unidade.</S.Description>
+        <S.Subtitle>Equipamentos</S.Subtitle>
+        <S.Description>Informe a unidade de um supermercado para listar todos os equipamentos utilizados nele.</S.Description>
         <S.SearchContainer>
-          <FormControl>
-            <InputLabel htmlFor="role-simple">Cargo</InputLabel>
-            <Input
-              id="role-simple"
-              onChange={(event) => setRole(event.target.value)}
-            />
-          </FormControl>
-          <S.InputWrapper>
             <FormControl>
               <InputLabel htmlFor="unity-simple">Unidade</InputLabel>
               <Input
@@ -55,18 +46,16 @@ const Employees: React.FC = () => {
                 onChange={(event) => setUnity(event.target.value)}
               />
             </FormControl>
-          </S.InputWrapper>
-          <Button onClick={getEmployees} variant="contained" color="primary">
+          <Button onClick={getEquipments} variant="contained" color="primary" style={{marginLeft: '64px'}}>
             pesquisar
           </Button>
         </S.SearchContainer>
         <S.ResultsContainer>
           <S.SectionTitle><b>Resultado: </b></S.SectionTitle>
-          {handleCreateList(arrayEmployees)}
+          {handleCreateList(arrayEquipments)}
         </S.ResultsContainer>
-      </div>
     </PageTemplate>
   );
 };
 
-export default Employees;
+export default Equipments;

@@ -51,9 +51,23 @@ const PageTemplate: React.FC = ({ children }) => {
               </S.ListItemStyled>
             </Link>
             <S.StyledDivider />
-            <S.ListItemStyled>
-              <S.MenuItem>página 3</S.MenuItem>
-            </S.ListItemStyled>
+            <Link  to="/providers">
+              <S.ListItemStyled>
+                <S.MenuItem>Fornecedores</S.MenuItem>
+              </S.ListItemStyled>
+            </Link>
+            <S.StyledDivider />
+            <Link  to="/equipments">
+              <S.ListItemStyled>
+                <S.MenuItem>Equipamentos</S.MenuItem>
+              </S.ListItemStyled>
+            </Link>
+            <S.StyledDivider />
+            <Link  to="/products">
+              <S.ListItemStyled>
+                <S.MenuItem>Produtos</S.MenuItem>
+              </S.ListItemStyled>
+            </Link>
             <S.StyledDivider />
           </S.ListContainer>
         </S.DrawerContainer>
@@ -65,7 +79,7 @@ const PageTemplate: React.FC = ({ children }) => {
       </S.Menu>
       <S.PageContent>
           <S.Title>
-              Cadeia de Supermercados
+              Cadeia de Supermercados <S.StyledSupermarket fontSize="large" color="inherit" />
         </S.Title>
         {children}
     </S.PageContent>

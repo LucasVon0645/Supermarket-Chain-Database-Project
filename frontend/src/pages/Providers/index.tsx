@@ -6,22 +6,33 @@ import PageTemplate from "../../templates/PageTemplate";
 
 import * as S from "./styles";
 
+// services
 
-const Employees: React.FC = () => {
+// utils
+
+// hooks
+
+// icons
+
+// components
+
+// interfaces
+
+const Providers: React.FC = () => {
   // constants
-  const getEmployees = async () => {
+  const getProviders = async () => {
     const { data } = await api.post("/funcionarios", { cargo: role });
     console.log(data);
     const list = data["response"];
-    setArrayEmployees(list);
+    setArrayProviders(list);
   };
 
   const [role, setRole] = useState("");
   const [, setUnity] = useState("");
-  const [arrayEmployees, setArrayEmployees] = useState([]);
+  const [arrayProviders, setArrayProviders] = useState([]);
 
-  const handleCreateList = (employeesList: any[]) => {
-    return employeesList.map((item: { [x: string]: string }, index) => {
+  const handleCreateList = (ProvidersList: any[]) => {
+    return ProvidersList.map((item: { [x: string]: string }, index) => {
       return (
         <S.ResultListItem>
             <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
@@ -36,37 +47,26 @@ const Employees: React.FC = () => {
 
   return (
     <PageTemplate>
-      <div>
-        <S.Subtitle>Funcionários</S.Subtitle>
-        <S.Description>Preencha as informações a seguir para consultar o quadro de funcionários com base no cargo e na unidade.</S.Description>
+        <S.Subtitle>Fornecedores</S.Subtitle>
+        <S.Description>Preencha as informações a seguir para consultar a lista de todos os fornecedores de um certo produto.</S.Description>
         <S.SearchContainer>
           <FormControl>
-            <InputLabel htmlFor="role-simple">Cargo</InputLabel>
+            <InputLabel htmlFor="role-simple">Nome do produto</InputLabel>
             <Input
               id="role-simple"
               onChange={(event) => setRole(event.target.value)}
             />
           </FormControl>
-          <S.InputWrapper>
-            <FormControl>
-              <InputLabel htmlFor="unity-simple">Unidade</InputLabel>
-              <Input
-                id="unity-simple"
-                onChange={(event) => setUnity(event.target.value)}
-              />
-            </FormControl>
-          </S.InputWrapper>
-          <Button onClick={getEmployees} variant="contained" color="primary">
+          <Button onClick={getProviders} variant="contained" color="primary" style={{marginLeft: '64px'}}>
             pesquisar
           </Button>
         </S.SearchContainer>
         <S.ResultsContainer>
           <S.SectionTitle><b>Resultado: </b></S.SectionTitle>
-          {handleCreateList(arrayEmployees)}
+          {handleCreateList(arrayProviders)}
         </S.ResultsContainer>
-      </div>
     </PageTemplate>
   );
 };
 
-export default Employees;
+export default Providers;

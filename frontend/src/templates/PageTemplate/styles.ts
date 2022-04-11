@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Button } from '@material-ui/core';
 import MenuIcon from "@material-ui/icons/MenuOpenOutlined";
 import ExitIcon from "@material-ui/icons/ArrowBackIos";
+import Supermarket from "@material-ui/icons/LocalGroceryStoreRounded"
 
 // interfaces
 
@@ -15,6 +16,13 @@ export const StyledMenuIcon = styled(MenuIcon)`
 export const StyledExitIcon = styled(ExitIcon)`
    && {
     color: #FFF;
+   }
+`
+export const StyledSupermarket = styled(Supermarket)`
+   && {
+    color: #1f1f20;
+    margin-bottom: -4px;
+    margin-left: 8px;
    }
 `
 
@@ -69,7 +77,7 @@ export const DrawerHeader = styled.div`
     align-items: center;
     height: 6.2rem;
     padding-right: 1rem;
-    margin-bottom: 3.2rem;
+    margin-bottom: 20px;
 `;
 
 export const ListContainer = styled.div`
