@@ -127,10 +127,10 @@ def get_all_orders():
                 cursor.execute('SELECT * FROM pedidos;')
                 result = cursor.fetchall()
                 print(result)
-                finalResult = list(map(lambda item: {"ID": item[0], "Nome": item[1], "Marca": item[2], "Departamento": item[3], "Descrição": item[4]}, result))
+                finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
                 response = {'response': finalResult}
                 print(finalResult)
-                
+    
     except Error as e:
         print(e)
     return response
