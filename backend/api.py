@@ -134,3 +134,28 @@ def get_all_orders():
     except Error as e:
         print(e)
     return response
+
+# Pesquisa todos os pedidos de um supermercado
+@app.route('/pedidos', methods = ['POST'])
+def get_orders_by_shop():
+    myresponse = request.json
+    market = myresponse["supermercado"]
+    response = {}
+    try:
+        with connect(
+            host="localhost",
+            user=u"root",
+            password="mysql",
+            database="cadeia_supermercados"
+        ) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN supermercados-pedidos ON supermercados-pedidos.IDSupermercado = pedidos.IDSupermercado WHERE IDSupermercado = "' + market + '";')
+                result = cursor.fetchall()
+                print(result)
+                finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
+                response = {'response': finalResult}
+                print(finalResult)
+    
+    except Error as e:
+        print(e)
+    return response
