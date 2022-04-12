@@ -10,14 +10,13 @@ import * as S from "./styles";
 const Equipments: React.FC = () => {
   // constants
   const getEquipments = async () => {
-    const { data } = await api.post("/funcionarios", { cargo: role });
+    const { data } = await api.post("/equipamentos", { supermercado: unity });
     console.log(data);
     const list = data["response"];
     setArrayEquipments(list);
   };
 
-  const [role, setRole] = useState("");
-  const [, setUnity] = useState("");
+  const [unity, setUnity] = useState("");
   const [arrayEquipments, setArrayEquipments] = useState([]);
 
   const handleCreateList = (equipmentsList: any[]) => {
@@ -27,8 +26,10 @@ const Equipments: React.FC = () => {
             <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
             <S.ResultListItemLabel>{"Nome: "}</S.ResultListItemLabel>
             <S.ResultListItemText>{item["Nome"]}</S.ResultListItemText>
-            <S.ResultListItemLabel>{"Salário: "}</S.ResultListItemLabel>
-            <S.ResultListItemText>{item["Salário"]}</S.ResultListItemText>
+            <S.ResultListItemLabel>{"Departamento: "}</S.ResultListItemLabel>
+            <S.ResultListItemText>{item["Departamento"]}</S.ResultListItemText>
+            <S.ResultListItemLabel>{"Descrição: "}</S.ResultListItemLabel>
+            <S.ResultListItemText>{item["Descrição"]}</S.ResultListItemText>
           </S.ResultListItem>
       );
     });
