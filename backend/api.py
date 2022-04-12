@@ -27,6 +27,29 @@ def get_all_unities():
         print(e)
     return response
 
+# Pesquisa todos os fornecedores
+@app.route('/fornecedores', methods = ['GET'])
+def get_all_providers():
+    response = {}
+    try:
+        with connect(
+            host="localhost",
+            user=u"root",
+            password="mysql",
+            database="cadeia_supermercados"
+        ) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT * FROM fornecedores;')
+                result = cursor.fetchall()
+                print(result)
+                finalResult = list(map(lambda item: {"CNPJ": item[0], "Nome": item[1], "Endereço": item[2], "Email": item[3], "Telefone": item[4]}, result))
+                response = {'response': finalResult}
+                print(finalResult)
+    
+    except Error as e:
+        print(e)
+    return response
+
 # Pesquisa produtos em estoque de um supermercado
 @app.route('/produtos/estoque', methods = ['POST'])
 def get_stock():
@@ -41,10 +64,7 @@ def get_stock():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                if market != "":
-                    cursor.execute('SELECT Nome, Quantidade, Marca FROM estoque INNER JOIN produtos ON produtos.IDProduto = estoque.IDProduto WHERE IDSupermercado = "' + market + '";')
-                else:
-                    cursor.execute('SELECT Nome, Quantidade, Marca FROM estoque INNER JOIN produtos ON produtos.IDProduto = estoque.IDProduto;')
+                cursor.execute('SELECT Nome, Quantidade, Marca, Preço FROM estoques INNER JOIN produtos ON produtos.IDProduto = estoques.IDProduto WHERE IDSupermercado = "' + market + '";')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"Nome": item[0], "Marca": item[2], "Quantidade": item[1], "Preço": item[3]}, result))
@@ -133,9 +153,9 @@ def get_equipments():
         ) as connection:
             with connection.cursor() as cursor:
                 if market != "":
-                    cursor.execute('SELECT IDEquipamento, Nome, Marca, Departamento, Descrição FROM equipamentos INNER JOIN supermercados_equipamentos ON supermercados_equipamentos.IDSupermercado = equipamentos.IDSupermercado WHERE IDSupermercado = "' + market + '";')
+                    cursor.execute('SELECT equipamentos.IDEquipamento, Nome, Marca, Departamento, Descrição FROM equipamentos INNER JOIN supermercados_equipamentos ON supermercados_equipamentos.IDEquipamento = equipamentos.IDEquipamento WHERE IDSupermercado = "' + market + '";')
                 else:
-                    cursor.execute('SELECT IDEquipamento, Nome, Marca, Departamento, Descrição FROM equipamentos INNER JOIN supermercados_equipamentos ON supermercados_equipamentos.IDSupermercado = equipamentos.IDSupermercado;')
+                    cursor.execute('SELECT equipamentos.IDEquipamento, Nome, Marca, Departamento, Descrição FROM equipamentos INNER JOIN supermercados_equipamentos ON supermercados_equipamentos.IDEquipamento = equipamentos.IDEquipamento;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"ID": item[0], "Nome": item[1], "Marca": item[2], "Departamento": item[3], "Descrição": item[4]}, result))
@@ -211,10 +231,7 @@ def get_providers_by_product():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                if product != "":
-                    cursor.execute('SELECT CNPJ, Nome FROM fornecedores INNER JOIN fornecedores_produtos ON fabricantes.CNPJ = fornecedores_produtos.CNPJ WHERE IDProduto = "' + product + '";')
-                else:
-                    cursor.execute('SELECT CNPJ, Nome FROM fornecedores INNER JOIN fornecedores_produtos ON fabricantes.CNPJ = fornecedores_produtos.CNPJ;')
+                cursor.execute('SELECT IDProduto from produtos WHERE Nome = "'+product+'";')
                 result = cursor.fetchall()
                 idproduct = str(result[0][0])
                 print(idproduct)
@@ -243,7 +260,10 @@ def get_orders_by_providers():
         ) as connection:
             with connection.cursor() as cursor:
                 if provider != "":
-                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_fornecedores ON  pedidos.IDProduto = pedidos_fornecedores.IDProduto WHERE CNPJ = "' + provider + '";')
+                    cursor.execute('SELECT CNPJ from fornecedores WHERE Nome = "'+provider+'";')
+                    result = cursor.fetchall()
+                    idprovider = str(result[0][0])
+                    cursor.execute('SELECT pedidos.IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_fornecedores ON  pedidos.IDPedido = pedidos_fornecedores.IDPedido WHERE CNPJ = "' + idprovider + '";')
                 else:
                     cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_fornecedores ON  pedidos.IDProduto = pedidos_fornecedores.IDProduto;')
                 result = cursor.fetchall()
@@ -271,7 +291,11 @@ def get_recent_orders():
         ) as connection:
             with connection.cursor() as cursor:
                 if product != "":
-                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido WHERE IDPedido = "' + product + '" ORDER BY DataCriação DESC;')
+                    cursor.execute('SELECT IDProduto from produtos WHERE Nome = "'+product+'";')
+                    result = cursor.fetchall()
+                    print(result)
+                    idproduct = str(result[0][0])
+                    cursor.execute('SELECT pedidos.IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido WHERE pedidos_produtos.IDProduto = "' + idproduct + '" ORDER BY DataCriação DESC;')
                 else:
                     cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido ORDER BY DataCriação DESC;')
                 result = cursor.fetchall()
@@ -341,3 +365,60 @@ def get_itens_of_a_order():
     except Error as e:
         print(e)
     return response
+
+# Pesquisa funcionários por cargo especificado em um supermercado especificado
+@app.route('/produtos/pedido', methods = ['POST'])
+def get_quantity_of_a_product_in_an_order():
+    myrequest = request.json
+    product = myrequest["nome"]
+    order = myrequest["idpedido"]
+    response = {}
+    try:
+        with connect(
+            host="localhost",
+            user=u"root",
+            password="mysql",
+            database="cadeia_supermercados"
+        ) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT IDProduto from produtos WHERE Nome = "'+product+'";')
+                result = cursor.fetchall()
+                print(result)
+                idproduct = str(result[0][0])
+                cursor.execute('SELECT Nome, pedidos_produtos.Quantidade FROM pedidos_produtos INNER JOIN produtos ON pedidos_produtos.IDProduto = produtos.IDProduto WHERE IDPedido = "' + order + '" AND produtos.IDProduto = "' + idproduct + '";')
+                result = cursor.fetchall()
+                finalResult = list(map(lambda item: {"Nome": item[0], "Quantidade": item[1]}, result))
+                response = {'response': finalResult}
+                print(result)
+                
+    except Error as e:
+        print(e)
+    return response
+
+""" # Pesquisa funcionários por cargo especificado em um supermercado especificado
+@app.route('/produtos/fornecedores', methods = ['POST'])
+def get_quantity_of_a_product_in_an_order():
+    myrequest = request.json
+    product = myrequest["nome"]
+    response = {}
+    try:
+        with connect(
+            host="localhost",
+            user=u"root",
+            password="mysql",
+            database="cadeia_supermercados"
+        ) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT IDProduto from produtos WHERE Nome = "'+product+'";')
+                result = cursor.fetchall()
+                print(result)
+                idproduct = str(result[0][0])
+                cursor.execute('SELECT Nome, pedidos_produtos.Quantidade FROM pedidos_produtos INNER JOIN produtos ON pedidos_produtos.IDProduto = produtos.IDProduto WHERE IDPedido = "' + order + '" AND produtos.IDProduto = "' + idproduct + '";')
+                result = cursor.fetchall()
+                finalResult = list(map(lambda item: {"Nome": item[0], "Quantidade": item[1]}, result))
+                response = {'response': finalResult}
+                print(result)
+                
+    except Error as e:
+        print(e)
+    return response """

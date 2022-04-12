@@ -31,8 +31,17 @@ const Orders: React.FC = () => {
     setArrayItens(list);
   };
 
+  const getOrdersOfProvider = async () => {
+    setShowListItens(false);
+    const { data } = await api.post("/pedidos/fornecedor", { nome: provider });
+    console.log(data);
+    const list = data["response"];
+    setArrayOrders(list);
+  };
+
   const [product, setProduct] = useState("");
   const [order, setOrder] = useState("");
+  const [provider, setProvider] = useState("");
   const [arrayOrders, setArrayOrders] = useState([]);
   const [arrayItens, setArrayItens] = useState([]);
 
@@ -98,7 +107,8 @@ const Orders: React.FC = () => {
         </S.SectionBlock>
         <S.SectionBlock marginLeft>
           <S.SectionTitle>
-            Consultar o pedido mais recente de um produto
+            Consultar os pedidos de um produto, do mais recente para o mais
+            antigo
           </S.SectionTitle>
           <S.SearchContainer>
             <FormControl>
@@ -110,6 +120,28 @@ const Orders: React.FC = () => {
             </FormControl>
             <Button
               onClick={getOrdersByProduct}
+              variant="contained"
+              color="primary"
+              style={{ marginLeft: "64px" }}
+            >
+              pesquisar
+            </Button>
+          </S.SearchContainer>
+        </S.SectionBlock>
+        <S.SectionBlock marginTop>
+          <S.SectionTitle>
+            Consultar todos os pedidos de um fornecedor
+          </S.SectionTitle>
+          <S.SearchContainer>
+            <FormControl>
+              <InputLabel htmlFor="role-simple">Nome do fornecedor</InputLabel>
+              <Input
+                id="role-simple"
+                onChange={(event) => setProvider(event.target.value)}
+              />
+            </FormControl>
+            <Button
+              onClick={getOrdersOfProvider}
               variant="contained"
               color="primary"
               style={{ marginLeft: "64px" }}

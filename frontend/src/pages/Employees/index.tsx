@@ -6,11 +6,13 @@ import PageTemplate from "../../templates/PageTemplate";
 
 import * as S from "./styles";
 
-
 const Employees: React.FC = () => {
   // constants
   const getEmployees = async () => {
-    const { data } = await api.post("/funcionarios", { cargo: role, supermercado: unity });
+    const { data } = await api.post("/funcionarios", {
+      cargo: role,
+      supermercado: unity,
+    });
     console.log(data);
     const list = data["response"];
     setArrayEmployees(list);
@@ -24,12 +26,12 @@ const Employees: React.FC = () => {
     return employeesList.map((item: { [x: string]: string }, index) => {
       return (
         <S.ResultListItem>
-            <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
-            <S.ResultListItemLabel>{"Nome: "}</S.ResultListItemLabel>
-            <S.ResultListItemText>{item["Nome"]}</S.ResultListItemText>
-            <S.ResultListItemLabel>{"Salário: "}</S.ResultListItemLabel>
-            <S.ResultListItemText>{item["Salário"]}</S.ResultListItemText>
-          </S.ResultListItem>
+          <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
+          <S.ResultListItemLabel>{"Nome: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["Nome"]}</S.ResultListItemText>
+          <S.ResultListItemLabel>{"Salário: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["Salário"]}</S.ResultListItemText>
+        </S.ResultListItem>
       );
     });
   };
@@ -38,7 +40,10 @@ const Employees: React.FC = () => {
     <PageTemplate>
       <div>
         <S.Subtitle>Funcionários</S.Subtitle>
-        <S.Description>Preencha as informações a seguir para consultar o quadro de funcionários com base no cargo e na unidade.</S.Description>
+        <S.Description>
+          Preencha as informações a seguir para consultar o quadro de
+          funcionários com base no cargo e na unidade.
+        </S.Description>
         <S.SearchContainer>
           <FormControl>
             <InputLabel htmlFor="role-simple">Cargo</InputLabel>
@@ -61,7 +66,9 @@ const Employees: React.FC = () => {
           </Button>
         </S.SearchContainer>
         <S.ResultsContainer>
-          <S.SectionTitle><b>Resultado: </b></S.SectionTitle>
+          <S.SectionTitle>
+            <b>Resultado: </b>
+          </S.SectionTitle>
           {handleCreateList(arrayEmployees)}
         </S.ResultsContainer>
       </div>

@@ -6,7 +6,6 @@ import PageTemplate from "../../templates/PageTemplate";
 
 import * as S from "./styles";
 
-
 const Equipments: React.FC = () => {
   // constants
   const getEquipments = async () => {
@@ -23,38 +22,48 @@ const Equipments: React.FC = () => {
     return equipmentsList.map((item: { [x: string]: string }, index) => {
       return (
         <S.ResultListItem>
-            <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
-            <S.ResultListItemLabel>{"Nome: "}</S.ResultListItemLabel>
-            <S.ResultListItemText>{item["Nome"]}</S.ResultListItemText>
-            <S.ResultListItemLabel>{"Departamento: "}</S.ResultListItemLabel>
-            <S.ResultListItemText>{item["Departamento"]}</S.ResultListItemText>
-            <S.ResultListItemLabel>{"Descrição: "}</S.ResultListItemLabel>
-            <S.ResultListItemText>{item["Descrição"]}</S.ResultListItemText>
-          </S.ResultListItem>
+          <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
+          <S.ResultListItemLabel>{"Nome: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["Nome"]}</S.ResultListItemText>
+          <S.ResultListItemLabel>{"Departamento: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["Departamento"]}</S.ResultListItemText>
+          <S.ResultListItemLabel>{"Descrição: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["Descrição"]}</S.ResultListItemText>
+        </S.ResultListItem>
       );
     });
   };
 
   return (
     <PageTemplate>
-        <S.Subtitle>Equipamentos</S.Subtitle>
-        <S.Description>Informe a unidade de um supermercado para listar todos os equipamentos utilizados nele.</S.Description>
-        <S.SearchContainer>
-            <FormControl>
-              <InputLabel htmlFor="unity-simple">Unidade</InputLabel>
-              <Input
-                id="unity-simple"
-                onChange={(event) => setUnity(event.target.value)}
-              />
-            </FormControl>
-          <Button onClick={getEquipments} variant="contained" color="primary" style={{marginLeft: '64px'}}>
-            pesquisar
-          </Button>
-        </S.SearchContainer>
-        <S.ResultsContainer>
-          <S.SectionTitle><b>Resultado: </b></S.SectionTitle>
-          {handleCreateList(arrayEquipments)}
-        </S.ResultsContainer>
+      <S.Subtitle>Equipamentos</S.Subtitle>
+      <S.Description>
+        Informe a unidade de um supermercado para listar todos os equipamentos
+        utilizados nele.
+      </S.Description>
+      <S.SearchContainer>
+        <FormControl>
+          <InputLabel htmlFor="unity-simple">Unidade</InputLabel>
+          <Input
+            id="unity-simple"
+            onChange={(event) => setUnity(event.target.value)}
+          />
+        </FormControl>
+        <Button
+          onClick={getEquipments}
+          variant="contained"
+          color="primary"
+          style={{ marginLeft: "64px" }}
+        >
+          pesquisar
+        </Button>
+      </S.SearchContainer>
+      <S.ResultsContainer>
+        <S.SectionTitle>
+          <b>Resultado: </b>
+        </S.SectionTitle>
+        {handleCreateList(arrayEquipments)}
+      </S.ResultsContainer>
     </PageTemplate>
   );
 };
