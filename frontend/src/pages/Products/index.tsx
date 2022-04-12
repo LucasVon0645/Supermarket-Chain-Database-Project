@@ -21,13 +21,12 @@ import * as S from "./styles";
 const Products: React.FC = () => {
   // constants
   const getProducts = async () => {
-    const { data } = await api.post("/funcionarios", { cargo: role });
+    const { data } = await api.post("/produtos/estoque", { supermercado: unity });
     console.log(data);
     const list = data["response"];
     setArrayProducts(list);
   };
 
-  const [role, setRole] = useState("");
   const [unity, setUnity] = useState("");
   const [arrayProducts, setArrayProducts] = useState([]);
 
@@ -38,8 +37,12 @@ const Products: React.FC = () => {
           <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
           <S.ResultListItemLabel>{"Nome: "}</S.ResultListItemLabel>
           <S.ResultListItemText>{item["Nome"]}</S.ResultListItemText>
-          <S.ResultListItemLabel>{"Salário: "}</S.ResultListItemLabel>
-          <S.ResultListItemText>{item["Salário"]}</S.ResultListItemText>
+          <S.ResultListItemLabel>{"Marca: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["Marca"]}</S.ResultListItemText>
+          <S.ResultListItemLabel>{"Quantidade: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["Quantidade"]}</S.ResultListItemText>
+          <S.ResultListItemLabel>{"Preço: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{" R$" + item["Preço"] + ",00"}</S.ResultListItemText>
         </S.ResultListItem>
       );
     });
@@ -58,7 +61,7 @@ const Products: React.FC = () => {
                 <InputLabel htmlFor="role-simple">Unidade</InputLabel>
                 <Input
                   id="role-simple"
-                  onChange={(event) => setRole(event.target.value)}
+                  onChange={(event) => setUnity(event.target.value)}
                 />
               </FormControl>
               <Button
@@ -80,7 +83,7 @@ const Products: React.FC = () => {
                 <InputLabel htmlFor="role-simple">Nome do produto</InputLabel>
                 <Input
                   id="role-simple"
-                  onChange={(event) => setRole(event.target.value)}
+                  /* onChange={(event) => setRole(event.target.value)} */
                 />
               </FormControl>
               <S.InputWrapper>

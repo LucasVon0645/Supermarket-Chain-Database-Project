@@ -10,14 +10,14 @@ import * as S from "./styles";
 const Employees: React.FC = () => {
   // constants
   const getEmployees = async () => {
-    const { data } = await api.post("/funcionarios", { cargo: role });
+    const { data } = await api.post("/funcionarios", { cargo: role, supermercado: unity });
     console.log(data);
     const list = data["response"];
     setArrayEmployees(list);
   };
 
   const [role, setRole] = useState("");
-  const [, setUnity] = useState("");
+  const [unity, setUnity] = useState("");
   const [arrayEmployees, setArrayEmployees] = useState([]);
 
   const handleCreateList = (employeesList: any[]) => {

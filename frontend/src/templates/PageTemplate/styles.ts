@@ -77,7 +77,7 @@ export const DrawerHeader = styled.div`
     align-items: center;
     height: 6.2rem;
     padding-right: 1rem;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 `;
 
 export const ListContainer = styled.div`

@@ -6,85 +6,125 @@ import PageTemplate from "../../templates/PageTemplate";
 
 import * as S from "./styles";
 
-// services
-
-// utils
-
-// hooks
-
-// icons
-
-// components
-
-// interfaces
-
 const Orders: React.FC = () => {
   // constants
-  const getEmployees = async () => {
+  /*   const getEmployees = async () => {
     const { data } = await api.post("/funcionarios", { cargo: role });
     console.log(data);
     const list = data["response"];
     setArrayEmployees(list);
+  }; */
+
+  const getOrdersByProduct = async () => {
+    setShowListItens(false);
+    const { data } = await api.post("/pedidos/produto", { nome: product });
+    console.log(data);
+    const list = data["response"];
+    setArrayOrders(list);
   };
 
-  const [role, setRole] = useState("");
-  const [unity, setUnity] = useState("");
-  const [arrayEmployees, setArrayEmployees] = useState([]);
+  const getItensOfOrder = async () => {
+    setShowListItens(true);
+    const { data } = await api.post("/pedidos/itens", { idpedido: order });
+    console.log(data);
+    const list = data["response"];
+    setArrayItens(list);
+  };
 
-  const handleCreateList = (employeesList: any[]) => {
-    return employeesList.map((item: { [x: string]: string }, index) => {
+  const [product, setProduct] = useState("");
+  const [order, setOrder] = useState("");
+  const [arrayOrders, setArrayOrders] = useState([]);
+  const [arrayItens, setArrayItens] = useState([]);
+
+  const [showListItens, setShowListItens] = useState(false);
+
+  const handleCreateListOfOrders = (ordersList: any[]) => {
+    return ordersList.map((item: { [x: string]: string }, index) => {
       return (
         <S.ResultListItem>
-            <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
-            <S.ResultListItemLabel>{"Nome: "}</S.ResultListItemLabel>
-            <S.ResultListItemText>{item["Nome"]}</S.ResultListItemText>
-            <S.ResultListItemLabel>{"Salário: "}</S.ResultListItemLabel>
-            <S.ResultListItemText>{item["Salário"]}</S.ResultListItemText>
-          </S.ResultListItem>
+          <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
+          <S.ResultListItemLabel>{"N° do pedido: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["ID"]}</S.ResultListItemText>
+          <S.ResultListItemLabel>
+            {"Data de solicitação: "}
+          </S.ResultListItemLabel>
+          <S.ResultListItemText>
+            {item["Data de solicitação"]}
+          </S.ResultListItemText>
+          <S.ResultListItemLabel>{"Data de entrega: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["Data de entrega"]}</S.ResultListItemText>
+        </S.ResultListItem>
       );
     });
   };
+
+  const handleCreateListOfItens = (itensList: any[]) => {
+    return itensList.map((item: { [x: string]: string }, index) => {
+      return (
+        <S.ResultListItem>
+          <S.ResultListItemIndex>{index + 1 + " - "}</S.ResultListItemIndex>
+          <S.ResultListItemLabel>{"Nome: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["Nome"]}</S.ResultListItemText>
+          <S.ResultListItemLabel>{"Quantidade: "}</S.ResultListItemLabel>
+          <S.ResultListItemText>{item["Quantidade"]}</S.ResultListItemText>
+        </S.ResultListItem>
+      );
+    });
+  };
+
   return (
     <PageTemplate>
-      <div>
-        <S.Subtitle>Pedidos</S.Subtitle>
-        <S.SearchContentContainer>
-          <S.SectionBlock>
-              <S.SectionTitle>Consultar todos os itens de um pedido</S.SectionTitle>
-              <S.SearchContainer>
-                  <FormControl>
-                      <InputLabel htmlFor="role-simple">Nº Pedido</InputLabel>
-                      <Input
-                      id="role-simple"
-                      onChange={(event) => setRole(event.target.value)}
-                      />
-                  </FormControl>
-                  <Button onClick={getEmployees} variant="contained" color="primary" style={{marginLeft: '64px'}}>
-                      pesquisar
-                  </Button>
-              </S.SearchContainer>
-          </S.SectionBlock>
-          <S.SectionBlock marginLeft>
-              <S.SectionTitle>Consultar o pedido mais recente de um produto</S.SectionTitle>
-              <S.SearchContainer>
-                  <FormControl>
-                      <InputLabel htmlFor="role-simple">Nome do produto</InputLabel>
-                      <Input
-                      id="role-simple"
-                      onChange={(event) => setRole(event.target.value)}
-                      />
-                  </FormControl>
-                  <Button onClick={getEmployees} variant="contained" color="primary" style={{marginLeft: '64px'}}>
-                      pesquisar
-                  </Button>
-              </S.SearchContainer>
-          </S.SectionBlock>
-        </S.SearchContentContainer>
-        <S.ResultsContainer>
-          <S.ResultTitle>Resultado: </S.ResultTitle>
-          {handleCreateList(arrayEmployees)}
-        </S.ResultsContainer>
-      </div>
+      <S.Subtitle>Pedidos</S.Subtitle>
+      <S.SearchContentContainer>
+        <S.SectionBlock>
+          <S.SectionTitle>Consultar todos os itens de um pedido</S.SectionTitle>
+          <S.SearchContainer>
+            <FormControl>
+              <InputLabel htmlFor="order-simple">Nº Pedido</InputLabel>
+              <Input
+                id="order-simple"
+                onChange={(event) => setOrder(event.target.value)}
+              />
+            </FormControl>
+            <Button
+              onClick={getItensOfOrder}
+              variant="contained"
+              color="primary"
+              style={{ marginLeft: "64px" }}
+            >
+              pesquisar
+            </Button>
+          </S.SearchContainer>
+        </S.SectionBlock>
+        <S.SectionBlock marginLeft>
+          <S.SectionTitle>
+            Consultar o pedido mais recente de um produto
+          </S.SectionTitle>
+          <S.SearchContainer>
+            <FormControl>
+              <InputLabel htmlFor="product-simple">Nome do produto</InputLabel>
+              <Input
+                id="product-simple"
+                onChange={(event) => setProduct(event.target.value)}
+              />
+            </FormControl>
+            <Button
+              onClick={getOrdersByProduct}
+              variant="contained"
+              color="primary"
+              style={{ marginLeft: "64px" }}
+            >
+              pesquisar
+            </Button>
+          </S.SearchContainer>
+        </S.SectionBlock>
+      </S.SearchContentContainer>
+      <S.ResultsContainer>
+        <S.ResultTitle>Resultado: </S.ResultTitle>
+        {showListItens
+          ? handleCreateListOfItens(arrayItens)
+          : handleCreateListOfOrders(arrayOrders)}
+      </S.ResultsContainer>
     </PageTemplate>
   );
 };
