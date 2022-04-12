@@ -18,7 +18,10 @@ def get_stock():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT Nome, Quantidade, Marca FROM estoque INNER JOIN produtos ON produtos.IDProduto = estoque.IDProduto WHERE IDSupermercado = "' + market + '";')
+                if market != "":
+                    cursor.execute('SELECT Nome, Quantidade, Marca FROM estoque INNER JOIN produtos ON produtos.IDProduto = estoque.IDProduto WHERE IDSupermercado = "' + market + '";')
+                else:
+                    cursor.execute('SELECT Nome, Quantidade, Marca FROM estoque INNER JOIN produtos ON produtos.IDProduto = estoque.IDProduto;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"Nome": item[0], "Marca": item[2], "Quantidade": item[1]} result))
@@ -43,7 +46,10 @@ def get_products():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT Nome, Marca FROM produtos WHERE Categoria = "' + category + '";')
+                if category != "":
+                    cursor.execute('SELECT Nome, Marca FROM produtos WHERE Categoria = "' + category + '";')
+                else:
+                    cursor.execute('SELECT Nome, Marca FROM produtos;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"Nome": item[0], "Marca": item[1]}, result))
@@ -100,7 +106,10 @@ def get_equipments():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT * FROM equipamentos INNER JOIN supermercados_equipamentos ON supermercados_equipamentos.IDSupermercado = equipamentos.IDSupermercado WHERE IDSupermercado = "' + market + '";')
+                if market != "":
+                    cursor.execute('SELECT IDEquipamento, Nome, Marca, Departamento, Descrição FROM equipamentos INNER JOIN supermercados_equipamentos ON supermercados_equipamentos.IDSupermercado = equipamentos.IDSupermercado WHERE IDSupermercado = "' + market + '";')
+                else:
+                    cursor.execute('SELECT IDEquipamento, Nome, Marca, Departamento, Descrição FROM equipamentos INNER JOIN supermercados_equipamentos ON supermercados_equipamentos.IDSupermercado = equipamentos.IDSupermercado;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"ID": item[0], "Nome": item[1], "Marca": item[2], "Departamento": item[3], "Descrição": item[4]}, result))
@@ -124,7 +133,7 @@ def get_all_orders():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT * FROM pedidos;')
+                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
@@ -149,7 +158,10 @@ def get_orders_by_shop():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN supermercados_pedidos ON supermercados_pedidos.IDSupermercado = pedidos.IDSupermercado WHERE IDSupermercado = "' + market + '";')
+                if market != "":
+                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN supermercados_pedidos ON supermercados_pedidos.IDSupermercado = pedidos.IDSupermercado WHERE IDSupermercado = "' + market + '";')
+                else:
+                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN supermercados_pedidos ON supermercados_pedidos.IDSupermercado = pedidos.IDSupermercado;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
@@ -174,7 +186,10 @@ def get_providers_by_product():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT CNPJ, Nome FROM fornecedores INNER JOIN fornecedores_produtos ON fabricantes.CNPJ = fornecedores_produtos.CNPJ WHERE IDProduto = "' + product + '";')
+                if product != "":
+                    cursor.execute('SELECT CNPJ, Nome FROM fornecedores INNER JOIN fornecedores_produtos ON fabricantes.CNPJ = fornecedores_produtos.CNPJ WHERE IDProduto = "' + product + '";')
+                else:
+                    cursor.execute('SELECT CNPJ, Nome FROM fornecedores INNER JOIN fornecedores_produtos ON fabricantes.CNPJ = fornecedores_produtos.CNPJ;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"Nome": item[1], "CNPJ": item[0]}, result))
@@ -199,7 +214,10 @@ def get_orders_by_providers():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_fornecedores ON  pedidos.IDProduto = pedidos_fornecedores.IDProduto WHERE CNPJ = "' + provider + '";')
+                if provider != "":
+                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_fornecedores ON  pedidos.IDProduto = pedidos_fornecedores.IDProduto WHERE CNPJ = "' + provider + '";')
+                else:
+                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_fornecedores ON  pedidos.IDProduto = pedidos_fornecedores.IDProduto;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
@@ -224,7 +242,10 @@ def get_recent_orders():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido WHERE IDPedido = "' + product + '" ORDER BY DataCriação DESC;')
+                if product != "":
+                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido WHERE IDPedido = "' + product + '" ORDER BY DataCriação DESC;')
+                else:
+                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido ORDER BY DataCriação DESC;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
@@ -250,7 +271,14 @@ def get_orders_by_product_and_shop():
             database="cadeia_supermercados"
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido INNER JOIN supermercados_pedidos ON pedidos.IDPedido = supermercados_pedidos.Idpedido WHERE IDSupermercado = "' + product + '" ORDER BY DataCriação DESC;')
+                if product != "" and market != "":
+                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido INNER JOIN supermercados_pedidos ON pedidos.IDPedido = supermercados_pedidos.Idpedido WHERE IDProduto = "' + product + '" AND IDSupermercado = "' + market + '";')
+                elif product != "":
+                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido INNER JOIN supermercados_pedidos ON pedidos.IDPedido = supermercados_pedidos.Idpedido WHERE IDProduto = "' + product + '";')
+                elif market != "":
+                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido INNER JOIN supermercados_pedidos ON pedidos.IDPedido = supermercados_pedidos.Idpedido WHERE IDSupermercado = "' + market + '";')
+                else :
+                    cursor.execute('SELECT IDPedido, DataCriação, DataEntrega FROM pedidos INNER JOIN pedidos_produtos ON pedidos.IDPedido = pedidos_produtos.IDPedido INNER JOIN supermercados_pedidos ON pedidos.IDPedido = supermercados_pedidos.Idpedido;')
                 result = cursor.fetchall()
                 print(result)
                 finalResult = list(map(lambda item: {"ID": item[0], "Data de solicitação": item[1], "Data de entrega": item[2]}, result))
